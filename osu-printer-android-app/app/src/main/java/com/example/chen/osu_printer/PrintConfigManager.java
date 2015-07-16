@@ -1,5 +1,8 @@
 package com.example.chen.osu_printer;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
+
 import java.util.List;
 
 /**
@@ -7,9 +10,11 @@ import java.util.List;
  */
 public class PrintConfigManager {
 
-    private boolean duplex;
+    private boolean mDuplex;
     private int copies;
+    private static final char separator = (char)251;
     public static final String defaultFolder = "OSU_printer";
+
 
     public List<FileObject> getToPrintFiles() {
         return toPrintFiles;
@@ -23,38 +28,31 @@ public class PrintConfigManager {
     private static PrintConfigManager mInstance;
     private List<FileObject> toPrintFiles;
 
-    public static PrintConfigManager getInstance(){
+    public static PrintConfigManager getInstance() {
         if (mInstance == null)
             mInstance = new PrintConfigManager();
         return mInstance;
     }
 
-    public void restart(){
-        duplex = false;
+    public void reconfig() {
+        mDuplex = false;
         copies = 1;
         printer = null;
     }
 
-    public void reconfig(){
-        duplex = false;
-        copies = 1;
-        printer = null;
-        toPrintFiles = null;
-    }
-
-    private PrintConfigManager(){
-        duplex = false;
+    private PrintConfigManager() {
+        mDuplex = false;
         copies = 1;
         printer = null;
         toPrintFiles = null;
     }
 
     public boolean isDuplex() {
-        return duplex;
+        return mDuplex;
     }
 
     public void setDuplex(boolean duplex) {
-        this.duplex = duplex;
+        this.mDuplex = duplex;
     }
 
     public int getCopies() {
@@ -72,4 +70,23 @@ public class PrintConfigManager {
     public void setPrinter(PrinterObject printer) {
         this.printer = printer;
     }
+
+    public void loadFromLocalXML(Context context) {      //pass application as context
+        this.reconfig();
+        this.mDuplex = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("config_duplex",
+                false);
+        this.copies = PreferenceManager.getDefaultSharedPreferences(context).getInt("config_copies",
+                1);
+
+    }
+
+    public void saveToLocalXML(Context context){         //pass application as context
+
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("config_duplex",
+                this.mDuplex).commit();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("config_copies",
+                this.copies).commit();
+
+    }
+
 }

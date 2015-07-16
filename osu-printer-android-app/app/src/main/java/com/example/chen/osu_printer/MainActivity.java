@@ -33,12 +33,17 @@ public class MainActivity extends Activity {
         mConfirmButton = (Button) findViewById(R.id.confirm_button);
         mConfirmButton.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v){
-                PrintConfigManager.getInstance().setToPrintFiles((
-                        (PrintFilesRecyclerViewAdapter)mRecyclerView.getAdapter()).getToPrintFiles());
+            public void onClick(View v) {
+                if (((PrintFilesRecyclerViewAdapter) mRecyclerView.getAdapter()).getToPrintFiles().size() > 0) {
+                    PrintConfigManager.getInstance().setToPrintFiles((
+                            (PrintFilesRecyclerViewAdapter) mRecyclerView.getAdapter()).getToPrintFiles());
 
-                Intent intent = new Intent(MainActivity.this, PrintConfigActivity.class);
-                startActivity(intent);
+                    Intent intent = new Intent(MainActivity.this, PrintConfigActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please select at least one file to print",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 

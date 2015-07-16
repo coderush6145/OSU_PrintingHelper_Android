@@ -1,5 +1,8 @@
 package com.example.chen.osu_printer;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +12,10 @@ import java.util.List;
 
 public class AccountManager {
     List<Account> mAccounts;
-    private AccountManager mInstance;
+    private static AccountManager mInstance;
+    private static final char separator = (char)251;
 
-    private class Account{
+    public class Account{
         private String mUsername;
         private String mPassword;
         private String department;
@@ -45,14 +49,18 @@ public class AccountManager {
         mAccounts = new ArrayList<Account>();
     }
 
-    public AccountManager getInstance(){
+    public static AccountManager getInstance(){
         if (mInstance == null) {
             mInstance = new AccountManager();
         }
        return mInstance;
     }
 
-    private boolean addAccount(String username, String password, String dept){
+    public void reset() {
+        mAccounts = new ArrayList<Account>();
+    }
+
+    public boolean addAccount(String username, String password, String dept){
         Account _account = new Account();
         _account.setUsername(username);
         _account.setPassword(password);
@@ -74,15 +82,38 @@ public class AccountManager {
         return true;
     }
 
-    private Account getAccount(int i){
+    public Account getAccount(int i){
         return mAccounts.get(i);
     }
 
-    private int size(){
+    public int size(){
         return mAccounts.size();
     }
 
-    private void deleteAccount(int i){
+    public void deleteAccount(int i){
         mAccounts.remove(i);
+    }
+
+    public void loadFromLocalXML(Context context) {      //pass application as context
+
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("account_amount",
+                this.size()).commit();
+        for (int _iter = 0; _iter < AccountManager.getInstance().size(); _iter++) {
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("account_" + String.valueOf(_iter),
+                    this.getAccount(_iter).getUsername() + separator +
+                    this.getAccount(_iter).getPassword() + separator +
+                    this.getAccount(_iter).getDepartment() + separator).commit();
+        }
+    }
+
+    public void saveToLocalXML(Context context){         //pass application as context
+
+        AccountManager.getInstance().reset();
+        int _cnt = PreferenceManager.getDefaultSharedPreferences(context).getInt("account_amount", 0);
+        for (int _iter = 0; _iter < _cnt; _iter++) {
+            String[] _tmp;
+            _tmp = PreferenceManager.getDefaultSharedPreferences(context).getString("account_" + String.valueOf(_iter), "").split(String.valueOf(separator));
+            this.addAccount(_tmp[0], _tmp[1], _tmp[2]);
+        }
     }
 }

@@ -33,7 +33,7 @@ public class PrintConfigActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.print_config_view);
 
-        PrintConfigManager.getInstance().reconfig();
+        PrintConfigManager.getInstance().loadFromLocalXML(getApplicationContext());
 
         mDuplexSwitch = (Switch) findViewById(R.id.doublePageSwitch);
         mDuplexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -45,9 +45,10 @@ public class PrintConfigActivity extends Activity {
                 }
             }
         });
+        mDuplexSwitch.setChecked(PrintConfigManager.getInstance().isDuplex());
 
         mCopiesEditText = (EditText) findViewById(R.id.copiesEditText);
-        mCopiesEditText.setText("1");
+        mCopiesEditText.setText(String.valueOf(PrintConfigManager.getInstance().getCopies()));
         mCopiesEditText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -56,9 +57,12 @@ public class PrintConfigActivity extends Activity {
 
                 // you can call or do what you want with your EditText here
             }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         });
 
         mPrintButton = (Button) findViewById(R.id.print_button);
@@ -69,6 +73,7 @@ public class PrintConfigActivity extends Activity {
                     //print the file
                     Toast.makeText(getApplicationContext(), "Printing...",
                             Toast.LENGTH_LONG).show();
+                    PrintConfigManager.getInstance().saveToLocalXML(getApplicationContext());
                     new PrintingProcess(PrintConfigActivity.this).execute(PrintConfigManager.getInstance());
 
                 } else {

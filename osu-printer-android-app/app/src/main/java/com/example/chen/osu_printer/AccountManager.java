@@ -15,6 +15,16 @@ public class AccountManager {
     private static AccountManager mInstance;
     private static final char separator = (char)251;
 
+    public Account getRunningAccount() {
+        return mRunningAccount;
+    }
+
+    public void setRunningAccount(Account account) {
+        this.mRunningAccount = account;
+    }
+
+    private Account mRunningAccount;
+
     public class Account{
         private String mUsername;
         private String mPassword;
@@ -86,6 +96,10 @@ public class AccountManager {
         return mAccounts.get(i);
     }
 
+    public List<Account> getAccounts(){
+        return mAccounts;
+    }
+
     public int size(){
         return mAccounts.size();
     }
@@ -96,24 +110,25 @@ public class AccountManager {
 
     public void loadFromLocalXML(Context context) {      //pass application as context
 
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("account_amount",
-                this.size()).commit();
-        for (int _iter = 0; _iter < AccountManager.getInstance().size(); _iter++) {
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("account_" + String.valueOf(_iter),
-                    this.getAccount(_iter).getUsername() + separator +
-                    this.getAccount(_iter).getPassword() + separator +
-                    this.getAccount(_iter).getDepartment() + separator).commit();
-        }
-    }
-
-    public void saveToLocalXML(Context context){         //pass application as context
-
         AccountManager.getInstance().reset();
         int _cnt = PreferenceManager.getDefaultSharedPreferences(context).getInt("account_amount", 0);
         for (int _iter = 0; _iter < _cnt; _iter++) {
             String[] _tmp;
             _tmp = PreferenceManager.getDefaultSharedPreferences(context).getString("account_" + String.valueOf(_iter), "").split(String.valueOf(separator));
             this.addAccount(_tmp[0], _tmp[1], _tmp[2]);
+        }
+
+    }
+
+    public void saveToLocalXML(Context context){         //pass application as context
+
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("account_amount",
+                this.size()).commit();
+        for (int _iter = 0; _iter < AccountManager.getInstance().size(); _iter++) {
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("account_" + String.valueOf(_iter),
+                    this.getAccount(_iter).getUsername() + separator +
+                            this.getAccount(_iter).getPassword() + separator +
+                            this.getAccount(_iter).getDepartment() + separator).commit();
         }
     }
 }

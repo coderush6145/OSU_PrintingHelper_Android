@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,10 +20,11 @@ public class PrinterRecyclerViewAdapter extends RecyclerView.Adapter<PrinterRecy
     private List<Boolean> mCheckboxes;
     private int mChosenPrinter;
 
-    public PrinterRecyclerViewAdapter(Context context, List<PrinterObject> data, List<Boolean> additional) {
+    public PrinterRecyclerViewAdapter(Context context, List<PrinterObject> data) {
         mContext = context;
         mPrinters = data;
-        mCheckboxes = additional;
+        mCheckboxes = new ArrayList<Boolean>();
+        for (int _i = 0; _i < data.size(); _i++) mCheckboxes.add(false);
         mChosenPrinter = -1;
     }
 

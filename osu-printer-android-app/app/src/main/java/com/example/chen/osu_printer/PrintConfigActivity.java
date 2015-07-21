@@ -16,9 +16,6 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PrintConfigActivity extends Activity {
 
     private RecyclerView mRecyclerView;
@@ -115,9 +112,7 @@ public class PrintConfigActivity extends Activity {
     }
 
     private void setupAdapter() {
-        List<Boolean> Checkboxes = new ArrayList<Boolean>();
-        for (int i = 0; i < 20; i++) Checkboxes.add(false);
-        mPrinterRecyclerViewAdapter = new PrinterRecyclerViewAdapter(this, new PrinterGenerator(20).getPrinters(), Checkboxes);
+        mPrinterRecyclerViewAdapter = new PrinterRecyclerViewAdapter(this, PrinterManager.mDeptPrintersMap.get(AccountManager.getInstance().getRunningAccount().getDepartment()));
         mRecyclerView.setAdapter(mPrinterRecyclerViewAdapter);
     }
 

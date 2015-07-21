@@ -26,4 +26,19 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.+'
     compile 'com.android.support:recyclerview-v7:+'
     compile files('libs/jsch-0.1.53.jar')
+    compile files('libs/jackson-annotations-2.5.0.jar')
+    compile files('libs/jackson-core-2.5.0.jar')
+    compile files('libs/jackson-databind-2.5.0.jar')
+    compile files('libs/jackson-databind-2.5.0-javadoc.jar')
+    compile files('libs/jackson-databind-2.5.0-sources.jar')
+}
+android {
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/services/com.fasterxml.jackson.core.ObjectCodec'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+    }
 }

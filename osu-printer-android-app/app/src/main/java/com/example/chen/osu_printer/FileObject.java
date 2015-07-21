@@ -1,35 +1,57 @@
 package com.example.chen.osu_printer;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by chen on 15/7/10.
  */
 public class FileObject {
     private String fileName;
-    private String lastUpdateTime;
-    private int size;
+    private long lastUpdateTime;
+    private long size;
     private String filePath;
+    private  String lastUpdateDate;
+
 
     FileObject() {
         this.fileName = "";
-        this.lastUpdateTime = "";
+        this.lastUpdateTime = 0;
         this.size = 0;
         this.filePath = "";
+    }
+
+    public String getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(long pastSecs) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy HH:mm");
+        String dateString = formatter.format(new Date(pastSecs * 1000L));
+
+        this.lastUpdateDate = dateString;
     }
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
-    public void setLastUpdateTime(String lastUpdateTime) {
+    public void setLastUpdateTime(long lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
+        setLastUpdateDate(lastUpdateTime);
     }
 
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
     public void setFilePath(String location) {
         this.filePath = location;
+
+        //generate filename
+        String[] _tmp = filePath.split("/");
+        this.setFileName(_tmp[_tmp.length -1]);
     }
 
     public String getFileName() {
@@ -37,11 +59,11 @@ public class FileObject {
         return fileName;
     }
 
-    public String getLastUpdateTime() {
+    public long getLastUpdateTime() {
         return lastUpdateTime;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
@@ -51,7 +73,17 @@ public class FileObject {
 
 
     public String getFileDescription(){
-        return "Modified: " + lastUpdateTime + "   " + "Size: " + String.valueOf(size) + "MB";
+
+        String strSize;
+        if (size < 1024) {
+            strSize = String.valueOf(size) + "B";
+        } else if (size < 1024*1024) {
+            strSize = String.valueOf(size/1024) + "KB";
+        } else {
+            strSize = String.valueOf(size/1024/1024) + "MB";
+        }
+
+        return "Modified: " + lastUpdateDate + "   " + "Size: " + strSize;
 
     }
 }

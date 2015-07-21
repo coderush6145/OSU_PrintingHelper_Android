@@ -19,7 +19,7 @@ public class FileGenerator {
 
         FileObject _file = new FileObject();
         _file.setFileName("testFile" + String.valueOf(index) + ".pdf");
-        _file.setLastUpdateTime("Apr 19");
+        _file.setLastUpdateTime(123);
         _file.setFilePath("");
         _file.setSize(2);
         return _file;

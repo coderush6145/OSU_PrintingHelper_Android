@@ -15,6 +15,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends Activity {
 
@@ -29,6 +31,8 @@ public class MainActivity extends Activity {
 
         this.requestWindowFeature(Window.FEATURE_ACTION_MODE_OVERLAY);
         setContentView(R.layout.activity_main);
+
+
 
         mConfirmButton = (Button) findViewById(R.id.confirm_button);
         mConfirmButton.setOnClickListener(new View.OnClickListener(){
@@ -69,7 +73,7 @@ public class MainActivity extends Activity {
                 })
         );
 
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.Orange, R.color.Green, R.color.Blue);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -79,14 +83,29 @@ public class MainActivity extends Activity {
                         setupAdapter();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                }, 2500);
+                },1000);
             }
         });
     }
 
     private void setupAdapter() {
-        mPrintFilesRecyclerViewAdapter = new PrintFilesRecyclerViewAdapter(this, new FileGenerator(20).getFiles());
-        mRecyclerView.setAdapter(mPrintFilesRecyclerViewAdapter);
+
+        //test
+
+        ArrayList<String> ext = new ArrayList<String>();
+        ext.add("pdf");
+        ext.add("doc");
+        FileFetcher fetcher = new FileFetcher(MainActivity.this, 1000000000, ext);
+        ArrayList<FileObject> files = (ArrayList<FileObject>)fetcher.fetchFiles();
+
+//        if (! files.isEmpty()) {
+            mPrintFilesRecyclerViewAdapter = new PrintFilesRecyclerViewAdapter(this, files);
+            mRecyclerView.setAdapter(mPrintFilesRecyclerViewAdapter);
+//        } else {
+//            mRecyclerView.setVisibility(View.GONE);
+//            TextView _text = (TextView) findViewById(R.id.empty_view);
+//            _text.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override

@@ -13,7 +13,7 @@ public class PrintConfigManager {
     private boolean mDuplex;
     private int copies;
     private static final char separator = (char)251;
-    public static final String defaultFolder = "OSU_printer";
+    public static final String defaultFolder = "temp_printer";
 
 
     public List<FileObject> getToPrintFiles() {

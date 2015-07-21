@@ -26,8 +26,8 @@ public class PrintingProcess extends AsyncTask<PrintConfigManager, String, Strin
             final PrintConfigManager config = args[0];
 
             //establish ssh connection
-            String username = "zhante";
-            String password = "zt1993@CSE";
+            String username = AccountManager.getInstance().getRunningAccount().getUsername();
+            String password = AccountManager.getInstance().getRunningAccount().getPassword();
             String ipAddress = "gamma.cse.ohio-state.edu";
             String defaultFolder = config.defaultFolder;
 

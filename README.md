@@ -1,1 +1,1 @@
-# OSU-printer-android-app
+# OSU_PrintingHelper_Android

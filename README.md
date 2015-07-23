@@ -7,7 +7,7 @@ print their documents using department printers more efficiently.
 The project currently is still under construction.
 
 ### Credit
-Author: Xianzhou Chem <br/>
+Author: Xianzhou Chen <br/>
 Email: chen.4835@osu.edu <br/>
 
 ### Other

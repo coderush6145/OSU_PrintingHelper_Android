@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <ImageView
+        android:id="@+id/imgPlaylistItemBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:maxHeight="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            >
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_login_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="20dp"
+            android:layout_weight="0.6"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:orientation="horizontal"
+            android:paddingTop="20dp"
+            android:weightSum="1"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.8"
+                android:orientation="horizontal"
+                android:weightSum="1" >
+                <Button
+                    android:id="@+id/tutorial_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.48"
+                    android:layout_height="wrap_content"
+                    android:text="Tutorial"
+                    android:background="@drawable/custom_button_1"
+                    android:alpha=".80"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.03"
+                    android:layout_height="fill_parent">
+                </LinearLayout>
+                <Button
+                    android:id="@+id/add_account_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.48"
+                    android:layout_height="wrap_content"
+                    android:text="New Account"
+                    android:background="@drawable/custom_button_1"
+                    android:alpha=".80"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

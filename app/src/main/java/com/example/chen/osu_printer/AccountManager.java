@@ -66,6 +66,7 @@ public class AccountManager {
 
     private AccountManager(){
         mAccounts = new ArrayList<Account>();
+        mRunningAccount = null;
     }
 
     public static AccountManager getInstance(){

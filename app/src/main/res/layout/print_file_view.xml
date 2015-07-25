@@ -16,7 +16,10 @@
             android:orientation="vertical"
             android:gravity="center">
             <ImageButton
+                android:padding="5dp"
+                android:layout_gravity="center"
                 android:id="@+id/file_checkbox"
+                android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_unchecked"

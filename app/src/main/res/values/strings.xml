@@ -27,7 +27,6 @@
     </string-array>
     <string name="title_activity_print_config_activity">print_config_activity</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">OSU Printing Helper</string>
 
 </resources>

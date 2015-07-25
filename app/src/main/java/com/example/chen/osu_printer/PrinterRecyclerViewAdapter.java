@@ -47,11 +47,13 @@ public class PrinterRecyclerViewAdapter extends RecyclerView.Adapter<PrinterRecy
 
     public class PrintersViewHolder extends RecyclerView.ViewHolder {
         TextView mPrinterNameTextView;
+        TextView mPrinterDescriptionTextView;
         private ImageButton mCheckButton;
 
         public PrintersViewHolder(View itemView) {
             super(itemView);
             mPrinterNameTextView = (TextView) itemView.findViewById(R.id.printer_name);
+            mPrinterDescriptionTextView = (TextView) itemView.findViewById(R.id.printer_description);
             mCheckButton = (ImageButton) itemView.findViewById(R.id.printer_checkbox);
         }
     }
@@ -67,8 +69,9 @@ public class PrinterRecyclerViewAdapter extends RecyclerView.Adapter<PrinterRecy
     public void onBindViewHolder(PrintersViewHolder viewHolder, int i) {
         PrinterObject Printer = getItem(i);
         viewHolder.mPrinterNameTextView.setText(Printer.getPrinterName());
+        viewHolder.mPrinterDescriptionTextView.setText("Located in " + Printer.getLocation() + ".");
         if (mCheckboxes.get(i)) {
-            viewHolder.mCheckButton.setImageResource(R.drawable.ic_action_checked);
+            viewHolder.mCheckButton.setImageResource(R.drawable.ic_action_choosed);
         } else {
             viewHolder.mCheckButton.setImageResource(R.drawable.ic_action_unchecked);
         }

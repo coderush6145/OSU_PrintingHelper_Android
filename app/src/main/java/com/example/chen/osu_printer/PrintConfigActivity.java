@@ -1,6 +1,7 @@
 package com.example.chen.osu_printer;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +17,20 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+
 public class PrintConfigActivity extends Activity {
 
     private RecyclerView mRecyclerView;
     private PrinterRecyclerViewAdapter mPrinterRecyclerViewAdapter;
+    private ArrayList<PrinterObject> mAvailablePrinters;
     private Switch mDuplexSwitch;
     private EditText mCopiesEditText;
     private Button mPrintButton;
@@ -31,6 +42,22 @@ public class PrintConfigActivity extends Activity {
         setContentView(R.layout.print_config_view);
 
         PrintConfigManager.getInstance().loadFromLocalXML(getApplicationContext());
+
+
+        //handle the case when app started from other application
+        if (AccountManager.getInstance().getRunningAccount() == null) {
+            AccountManager.getInstance().loadFromLocalXML(getApplicationContext());
+            if (AccountManager.getInstance().getAccounts().isEmpty()) {
+                Toast.makeText(PrintConfigActivity.this, "No accounts available. Please add accounts through application main entry.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(PrintConfigActivity.this, "Note that the first account is being used now.",
+                        Toast.LENGTH_LONG).show();
+                AccountManager.getInstance().setRunningAccount(AccountManager.getInstance().getAccount(0));
+            }
+        }
+
+        new LoadPrinterInfoFromServer().execute();
 
         mDuplexSwitch = (Switch) findViewById(R.id.doublePageSwitch);
         mDuplexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -49,8 +76,13 @@ public class PrintConfigActivity extends Activity {
         mCopiesEditText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-
-                PrintConfigManager.getInstance().setCopies(Integer.valueOf(s.toString()));
+                if (s.toString().length() > 0 && s.toString().length() < 4 && Integer.valueOf(s.toString()) > 0) {
+                    PrintConfigManager.getInstance().setCopies(Integer.valueOf(s.toString()));
+                }
+                if (s.toString().length() >= 4) {
+                    Toast.makeText(getApplicationContext(), "Please note that a too big number will not be accepted.",
+                            Toast.LENGTH_SHORT).show();
+                }
 
                 // you can call or do what you want with your EditText here
             }
@@ -63,20 +95,28 @@ public class PrintConfigActivity extends Activity {
         });
 
         mPrintButton = (Button) findViewById(R.id.print_button);
-        mPrintButton.setOnClickListener(new View.OnClickListener(){
+        mPrintButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                if (PrintConfigManager.getInstance().getPrinter() != null) {
-                    //print the file
-                    Toast.makeText(getApplicationContext(), "Printing...",
-                            Toast.LENGTH_LONG).show();
-                    PrintConfigManager.getInstance().saveToLocalXML(getApplicationContext());
-                    new PrintingProcess(PrintConfigActivity.this).execute(PrintConfigManager.getInstance());
+            public void onClick(View v) {
+                if (mCopiesEditText.getText().toString().length() != 0 && Integer.valueOf(mCopiesEditText.getText().toString()) >= 1) {
+                    if (PrintConfigManager.getInstance().getPrinter() != null) {
+                        //print the file
+                        PrintConfigManager.getInstance().saveToLocalXML(getApplicationContext());
+                        new PrintingProcess(PrintConfigActivity.this).execute(PrintConfigManager.getInstance());
 
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please choose the printer before proceed.",
+                                Toast.LENGTH_LONG).show();
+
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please choose the printer before proceed.",
-                            Toast.LENGTH_LONG).show();
-
+                    if (mCopiesEditText.getText().toString().length() == 0) {
+                        Toast.makeText(getApplicationContext(), "Please fill in the number of copies needed before proceed.",
+                                Toast.LENGTH_LONG).show();
+                    } else if (Integer.valueOf(mCopiesEditText.getText().toString()) < 1) {
+                        Toast.makeText(getApplicationContext(), "Please fill in a number greater than 0 in the copies field.",
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -86,7 +126,15 @@ public class PrintConfigActivity extends Activity {
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        setupAdapter();
+
+
+
+        //lock needed??
+
+        //lock needed??
+
+        //lock needed??
+        if (mRecyclerView.getAdapter() == null) setupAdapter();
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -117,10 +165,22 @@ public class PrintConfigActivity extends Activity {
                     }
                 })
         );
+
+
     }
 
-    private void setupAdapter() {
-        mPrinterRecyclerViewAdapter = new PrinterRecyclerViewAdapter(this, PrinterManager.mDeptPrintersMap.get(AccountManager.getInstance().getRunningAccount().getDepartment()));
+    private synchronized void setupAdapter() {
+
+        try {
+            if (mAvailablePrinters == null || mAvailablePrinters.isEmpty()) {
+                mAvailablePrinters = new ArrayList<PrinterObject>();
+                mAvailablePrinters.addAll(PrinterManager.mDeptPrintersMap.get(AccountManager.getInstance().getRunningAccount().getDepartment()));
+            }
+        }
+        catch (Exception e) {
+
+        }
+        mPrinterRecyclerViewAdapter = new PrinterRecyclerViewAdapter(this, mAvailablePrinters);
         mRecyclerView.setAdapter(mPrinterRecyclerViewAdapter);
     }
 
@@ -144,5 +204,51 @@ public class PrintConfigActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public class LoadPrinterInfoFromServer extends AsyncTask<String, String, String> {
+
+        protected String doInBackground(String ...args) { //parameters needed
+            try {
+                URL oracle = new URL("http://web.cse.ohio-state.edu/~zhante/OSU_printers.json");
+                BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+                String printerInfo = "";
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                    printerInfo += inputLine + "\n";
+                in.close();
+
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                ArrayList<PrinterObject> ret = mapper.readValue(printerInfo, new TypeReference<ArrayList<PrinterObject>>(){});
+                new PrinterManager().setAllPrinters(ret);
+
+            } catch (Exception e) {
+                PrintConfigActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(PrintConfigActivity.this, "Unable to fetch info from server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+
+
+
+            //lock needed??
+
+            //lock needed??
+
+            //lock needed?? for getAdapter??
+            if (mRecyclerView.getAdapter() == null)
+                setupAdapter();
+            else
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 }

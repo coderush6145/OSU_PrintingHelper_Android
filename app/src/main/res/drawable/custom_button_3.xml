@@ -43,8 +43,8 @@
     <item>
         <shape>
             <gradient
-                android:endColor="@color/MediumSeaGreen"
-                android:startColor="@color/MediumSeaGreen"
+                android:endColor="@color/PowderBlue"
+                android:startColor="@color/PowderBlue"
                 android:angle="270" />
             <stroke
                 android:width="2dp"

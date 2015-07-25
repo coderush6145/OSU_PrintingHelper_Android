@@ -39,7 +39,7 @@ public class PrintingProcess extends AsyncTask<PrintConfigManager, String, Strin
             {
                 context.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Cannot connect to server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
                     }
                 });
                 return null;

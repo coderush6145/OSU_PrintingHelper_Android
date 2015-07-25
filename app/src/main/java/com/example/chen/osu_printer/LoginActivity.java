@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,17 +101,13 @@ public class LoginActivity extends Activity {
                 })
         );
 
-        new LoadPrinterInfoFromServer().execute();
+//        new LoadPrinterInfoFromServer().execute();
 
     }
 
 
     private void setupAdapter() {
-        if (AccountManager.getInstance().size() == 0) {
-            AccountManager.getInstance().addAccount("Te Zhang", "zhante", "zt1993@CSE", 1);
-            AccountManager.getInstance().addAccount("Dingkang Wang", "", "123456", 1);
-            AccountManager.getInstance().addAccount("Yuzhen Liu", "", "123456", 1);
-        }
+
         mAccountsViewAdapter = new AccountRecyclerViewAdapter(this, AccountManager.getInstance().getAccounts());
         mRecyclerView.setAdapter(mAccountsViewAdapter);
     }
@@ -234,8 +229,12 @@ public class LoginActivity extends Activity {
                 new PrinterManager().setAllPrinters(ret);
 
             } catch (Exception e) {
-                Log.e("json", Log.getStackTraceString(e));
-            }
+                LoginActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(LoginActivity.this, "Unable to fetch info from server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
+                    }
+                });
+                 }
             return null;
         }
     }

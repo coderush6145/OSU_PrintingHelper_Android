@@ -2,10 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"  >
 
 
     <LinearLayout
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -17,25 +19,40 @@
             android:gravity="center">
             <ImageButton
                 android:id="@+id/printer_checkbox"
+                android:padding="5dp"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:src="@drawable/ic_action_unchecked"
+                android:background="@android:color/transparent"
                 />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true" >
             <TextView
-                android:padding="18dp"
+                android:paddingTop="18dp"
+                android:paddingLeft="5dp"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:id="@+id/printer_name"
+                android:typeface="monospace"
                 android:text="dl-172"
+                />
+            <TextView
+                android:paddingBottom="18dp"
+                android:paddingLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:id="@+id/printer_description"
+                android:typeface="monospace"
+                android:text="Located in dreese lab 172"
                 />
         </LinearLayout>
     </LinearLayout>

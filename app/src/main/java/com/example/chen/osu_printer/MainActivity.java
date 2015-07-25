@@ -1,7 +1,10 @@
 package com.example.chen.osu_printer;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +38,8 @@ public class MainActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_ACTION_MODE_OVERLAY);
         setContentView(R.layout.activity_main);
 
+        ActionBar bar = getActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.argb(100, 169, 169, 169)));
 
 
         mConfirmButton = (Button) findViewById(R.id.confirm_button);

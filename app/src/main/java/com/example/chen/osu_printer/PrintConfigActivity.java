@@ -57,7 +57,6 @@ public class PrintConfigActivity extends Activity {
             }
         }
 
-        new LoadPrinterInfoFromServer().execute();
 
         mDuplexSwitch = (Switch) findViewById(R.id.doublePageSwitch);
         mDuplexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -127,15 +126,6 @@ public class PrintConfigActivity extends Activity {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-
-
-        //lock needed??
-
-        //lock needed??
-
-        //lock needed??
-        if (mRecyclerView.getAdapter() == null) setupAdapter();
-
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -166,16 +156,21 @@ public class PrintConfigActivity extends Activity {
                 })
         );
 
+        //Only the first time entering from external application need to load info from server, after the first time we only need to select the printers of the corresponding dept.
+        if (PrinterManager.mAllPrinters == null || PrinterManager.mAllPrinters.isEmpty()){
+            new LoadPrinterInfoFromServer().execute();
+        }
+        else {
+            setupAdapter();
+        }
 
     }
 
-    private synchronized void setupAdapter() {
+    private void setupAdapter() {
 
         try {
-            if (mAvailablePrinters == null || mAvailablePrinters.isEmpty()) {
-                mAvailablePrinters = new ArrayList<PrinterObject>();
-                mAvailablePrinters.addAll(PrinterManager.mDeptPrintersMap.get(AccountManager.getInstance().getRunningAccount().getDepartment()));
-            }
+            mAvailablePrinters = PrinterManager.mDeptPrintersMap.get(AccountManager.getInstance().getRunningAccount().getDepartment());
+
         }
         catch (Exception e) {
 
@@ -237,18 +232,8 @@ public class PrintConfigActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
+            setupAdapter();
 
-
-
-            //lock needed??
-
-            //lock needed??
-
-            //lock needed?? for getAdapter??
-            if (mRecyclerView.getAdapter() == null)
-                setupAdapter();
-            else
-                mRecyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 }

@@ -87,7 +87,7 @@ public class LoginActivity extends Activity {
                     }
 
                     @Override
-                     public void onItemLongClick(View view, final int position) {
+                    public void onItemLongClick(View view, final int position) {
 
                         Vibrator v = (Vibrator) LoginActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
                         v.vibrate(50);
@@ -101,7 +101,7 @@ public class LoginActivity extends Activity {
                 })
         );
 
-//        new LoadPrinterInfoFromServer().execute();
+        new LoadPrinterInfoFromServer().execute();
 
     }
 
@@ -210,8 +210,8 @@ public class LoginActivity extends Activity {
     }
 
 
-
     public class LoadPrinterInfoFromServer extends AsyncTask<String, String, String> {
+        private Context mContext;
 
         protected String doInBackground(String ...args) { //parameters needed
             try {
@@ -229,15 +229,17 @@ public class LoginActivity extends Activity {
                 new PrinterManager().setAllPrinters(ret);
 
             } catch (Exception e) {
-                LoginActivity.this.runOnUiThread(new Runnable() {
+                ((Activity)mContext).runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(LoginActivity.this, "Unable to fetch info from server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(((Activity)mContext), "Unable to fetch info from server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
                     }
                 });
-                 }
+            }
+
             return null;
         }
     }
+
 
 
 }

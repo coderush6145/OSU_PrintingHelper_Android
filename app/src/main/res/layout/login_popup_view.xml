@@ -2,79 +2,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/rounded_corner_bg"
     android:orientation="horizontal"
-    android:weightSum="1"
-    android:background="@android:color/background_light" >
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="0.8"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:alpha=".85"
-        android:background="@drawable/login_popup_background">
-        >
+    android:weightSum="1">
+    >
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/popup_name_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
-            <EditText
-                android:id="@+id/popup_name_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="Name"
-                android:textStyle="normal|italic"
-                android:background="@color/White"
-                android:layout_margin="1dp"/>
-            <EditText
-                android:id="@+id/popup_username_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="Username"
-                android:textStyle="normal|italic"
-                android:typeface="monospace"/>
-            <EditText
-                android:id="@+id/popup_password_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:textStyle="normal|italic"
-                android:typeface="monospace"/>
-            <!--<Button-->
-                <!--android:id="@+id/popup_department_button"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Department" />-->
+            android:layout_margin="1dp"
+            android:hint="Name" />
 
-            <NumberPicker
-                android:layout_gravity="center"
-                android:id="@+id/dept_picker"
-                android:layout_width="fill_parent"
+        <EditText
+            android:id="@+id/popup_username_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:typeface="monospace" />
+
+        <EditText
+            android:id="@+id/popup_password_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:typeface="monospace" />
+        <!--<Button-->
+        <!--android:id="@+id/popup_department_button"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Department" />-->
+
+        <NumberPicker
+            android:id="@+id/dept_picker"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/popup_save_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Save"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"  >
-                <Button
-                    android:id="@+id/popup_save_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Save"
-                    android:background="@drawable/custom_button_2"
-                    android:layout_gravity="left" />
-                <Button
-                    android:id="@+id/popup_delete_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Delete"
-                    android:layout_gravity="right"
-                    android:background="@drawable/custom_button_2"/>
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="40dp" />
 
-            </LinearLayout>
-        </LinearLayout>
+            <Button
+                android:id="@+id/popup_delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="40dp" />
+
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

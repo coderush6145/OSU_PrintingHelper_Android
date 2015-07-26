@@ -56,6 +56,12 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
 
     @Override
     public int getItemCount() {
+
+        //test
+
+
+
+
         return mAccounts.size();
     }
 }

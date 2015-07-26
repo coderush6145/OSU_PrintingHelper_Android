@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,6 +39,7 @@ public class LoginActivity extends Activity {
     private final int MODIFY_EXISTING_ACCOUNT = 1;
 
     private RecyclerView mRecyclerView;
+    private TextView mEmptyView;
     private AccountRecyclerViewAdapter mAccountsViewAdapter;
     private PopupWindow mPopupWindow = null;
     private Button mTutorialButton;
@@ -75,6 +78,8 @@ public class LoginActivity extends Activity {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         setupAdapter();
+        checkEmpty();
+
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -103,6 +108,24 @@ public class LoginActivity extends Activity {
 
         new LoadPrinterInfoFromServer().execute();
 
+    }
+
+
+
+    //this is a method that make up for recyclerview's shortage of empty view
+    private void checkEmpty(){
+
+        if (mEmptyView == null) {
+            mEmptyView = (TextView) findViewById(R.id.activity_login_emptyview);
+        }
+        if (mRecyclerView.getAdapter().getItemCount() == 0) {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyView.setTypeface(Typeface.MONOSPACE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
     }
 
 
@@ -160,6 +183,7 @@ public class LoginActivity extends Activity {
                         AccountManager.getInstance().getAccount(position).setPassword(passwordText.getText().toString());
                         AccountManager.getInstance().getAccount(position).setDepartment(deptPicker.getValue());
                         mRecyclerView.getAdapter().notifyDataSetChanged();
+                        checkEmpty();
                         mPopupWindow.dismiss();
 
                     } else if (type == ADD_NEW_ACCOUNT){
@@ -168,6 +192,7 @@ public class LoginActivity extends Activity {
                                                                 passwordText.getText().toString(),
                                                                 deptPicker.getValue());
                         mRecyclerView.getAdapter().notifyDataSetChanged();
+                        checkEmpty();
                         mPopupWindow.dismiss();
                     }
                     AccountManager.getInstance().saveToLocalXML(getApplicationContext());
@@ -187,6 +212,7 @@ public class LoginActivity extends Activity {
                 if (type == MODIFY_EXISTING_ACCOUNT) {
                     AccountManager.getInstance().deleteAccount(position);
                     mRecyclerView.getAdapter().notifyDataSetChanged();
+                    checkEmpty();
                 }
                 mPopupWindow.dismiss();
                 AccountManager.getInstance().saveToLocalXML(getApplicationContext());
@@ -211,7 +237,6 @@ public class LoginActivity extends Activity {
 
 
     public class LoadPrinterInfoFromServer extends AsyncTask<String, String, String> {
-        private Context mContext;
 
         protected String doInBackground(String ...args) { //parameters needed
             try {
@@ -229,9 +254,9 @@ public class LoginActivity extends Activity {
                 new PrinterManager().setAllPrinters(ret);
 
             } catch (Exception e) {
-                ((Activity)mContext).runOnUiThread(new Runnable() {
+                LoginActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(((Activity)mContext), "Unable to fetch info from server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(((Activity) LoginActivity.this), "Unable to fetch info from server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
                     }
                 });
             }

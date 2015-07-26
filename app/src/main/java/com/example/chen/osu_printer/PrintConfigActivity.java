@@ -2,6 +2,7 @@ package com.example.chen.osu_printer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 public class PrintConfigActivity extends Activity {
 
     private RecyclerView mRecyclerView;
+    private TextView mEmptyView;
     private PrinterRecyclerViewAdapter mPrinterRecyclerViewAdapter;
     private ArrayList<PrinterObject> mAvailablePrinters;
     private Switch mDuplexSwitch;
@@ -178,6 +181,21 @@ public class PrintConfigActivity extends Activity {
 
     }
 
+    private void checkEmpty(){
+
+        if (mEmptyView == null) {
+            mEmptyView = (TextView) findViewById(R.id.activity_print_config_emptyview);
+        }
+        if (mRecyclerView.getAdapter() == null || mRecyclerView.getAdapter().getItemCount() == 0) {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyView.setTypeface(Typeface.MONOSPACE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
     private void setupAdapter() {
 
         try {
@@ -187,8 +205,12 @@ public class PrintConfigActivity extends Activity {
         catch (Exception e) {
 
         }
-        mPrinterRecyclerViewAdapter = new PrinterRecyclerViewAdapter(this, mAvailablePrinters);
-        mRecyclerView.setAdapter(mPrinterRecyclerViewAdapter);
+
+        if (mAvailablePrinters != null) {
+            mPrinterRecyclerViewAdapter = new PrinterRecyclerViewAdapter(this, mAvailablePrinters);
+            mRecyclerView.setAdapter(mPrinterRecyclerViewAdapter);
+        }
+        checkEmpty();
     }
 
     @Override
@@ -213,9 +235,9 @@ public class PrintConfigActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class LoadPrinterInfoFromServer extends AsyncTask<String, String, String> {
+    public class LoadPrinterInfoFromServer extends AsyncTask<String, String, Boolean> {
 
-        protected String doInBackground(String ...args) { //parameters needed
+        protected Boolean doInBackground(String ...args) { //parameters needed
             try {
                 URL oracle = new URL("http://web.cse.ohio-state.edu/~zhante/OSU_printers.json");
                 BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
@@ -236,16 +258,17 @@ public class PrintConfigActivity extends Activity {
                         Toast.makeText(PrintConfigActivity.this, "Unable to fetch info from server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
                     }
                 });
+
+                return false;
             }
-            return null;
+            return true;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(Boolean loadResult) {
+            super.onPostExecute(loadResult);
 
             setupAdapter();
-
         }
     }
 }

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class MainActivity extends Activity {
     private RecyclerView mRecyclerView;
     private PrintFilesRecyclerViewAdapter mPrintFilesRecyclerViewAdapter;
     private Button mConfirmButton;
+    private TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,7 @@ public class MainActivity extends Activity {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         setupAdapter();
+        checkEmpty();
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -74,6 +78,7 @@ public class MainActivity extends Activity {
                             ((PrintFilesRecyclerViewAdapter)mRecyclerView.getAdapter()).setCheckBox(position, false);
                         }
                         ((PrintFilesRecyclerViewAdapter)mRecyclerView.getAdapter()).notifyItemRangeChanged(position, 1);
+                        checkEmpty();
                     }
 
                     @Override
@@ -112,6 +117,22 @@ public class MainActivity extends Activity {
                 },1000);
             }
         });
+    }
+
+    //this is a method that make up for recyclerview's shortage of empty view
+    private void checkEmpty(){
+
+        if (mEmptyView == null) {
+            mEmptyView = (TextView) findViewById(R.id.activity_main_emptyview);
+        }
+        if (mRecyclerView.getAdapter().getItemCount() == 0) {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyView.setTypeface(Typeface.MONOSPACE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
     }
 
     private void setupAdapter() {

@@ -13,13 +13,11 @@ public class PrintConfigManager {
     private boolean mDuplex;
     private int copies;
     private static final char separator = (char)251;
-    public static final String defaultFolder = "temp_printer";
+    public static final String defaultFolder = "temp_print";
 
     private PrinterObject printer;
     private List<FileObject> toPrintFiles;
     private static PrintConfigManager mInstance;
-
-
 
     public List<FileObject> getToPrintFiles() {
         return toPrintFiles;

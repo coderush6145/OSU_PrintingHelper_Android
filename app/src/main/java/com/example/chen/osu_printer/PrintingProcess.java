@@ -30,7 +30,7 @@ public class PrintingProcess extends AsyncTask<PrintConfigManager, String, Strin
             //establish ssh connection
             String username = AccountManager.getInstance().getRunningAccount().getUsername();
             String password = AccountManager.getInstance().getRunningAccount().getPassword();
-            String ipAddress = "gamma.cse.ohio-state.edu";
+            String ipAddress = GlobalParameters.departmentServerIp[AccountManager.getInstance().getRunningAccount().getDepartment()];  //need to be changed
             String defaultFolder = config.defaultFolder;
 
             SSHManager instance = new SSHManager(username, password, ipAddress, "");
@@ -39,18 +39,21 @@ public class PrintingProcess extends AsyncTask<PrintConfigManager, String, Strin
             {
                 context.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(context, "Cannot connect to server, recheck your network connection might be helpful.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
                 return null;
+            } else{
+                context.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(context, "Processing...", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             //make the default folder for storing files
             instance.sendCommand("mkdir " + defaultFolder);
 
-
-
-            Log.e("stack??", makePrintCommand(config));
 
             //upload file
             try {
@@ -63,7 +66,7 @@ public class PrintingProcess extends AsyncTask<PrintConfigManager, String, Strin
                     sftpChannel.put(_f.getFilePath(), ".");
 
             } catch (Exception e) {
-                Log.e("stack??",Log.getStackTraceString(e));
+                Log.e("stackTrace",Log.getStackTraceString(e));
                 System.exit(0);
             }
 
@@ -78,14 +81,12 @@ public class PrintingProcess extends AsyncTask<PrintConfigManager, String, Strin
             }
 
 
-            context.runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(context, makePrintCommand(config), Toast.LENGTH_LONG).show();
-                }
-            });
-
             instance.sendCommand(makePrintCommand(config));
             instance.sendCommand(makeDeleteCommand(config, nonPdfFilesName));
+
+
+            Log.d("Print Command", makePrintCommand(config));
+            Log.d("Delete Command", makeDeleteCommand(config, nonPdfFilesName));
 
             //close ssh connection
             instance.close();

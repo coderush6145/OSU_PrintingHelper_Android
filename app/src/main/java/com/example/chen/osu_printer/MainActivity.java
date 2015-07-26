@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,7 +18,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 
 
@@ -85,17 +82,18 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onItemSwipe(View view, int position) {
-                        File file = new File(((PrintFilesRecyclerViewAdapter)mRecyclerView.getAdapter()).getItem(position).getFilePath());
-                        boolean deleted = file.delete();
-                        ((PrintFilesRecyclerViewAdapter)mRecyclerView.getAdapter()).removeItem(position);
-                        (mRecyclerView.getAdapter()).notifyDataSetChanged();
-                        MediaScannerConnection.scanFile(MainActivity.this, new String[]{ file.getAbsolutePath()}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                            public void onScanCompleted(String path, Uri uri)
-                            {
-                            }
-                        });
-                        Toast.makeText(getApplicationContext(), "Deleted!!" + String.valueOf(deleted),
-                                Toast.LENGTH_LONG).show();
+//                        File file = new File(((PrintFilesRecyclerViewAdapter)mRecyclerView.getAdapter()).getItem(position).getFilePath());
+//                        boolean deleted = file.delete();
+//                        ((PrintFilesRecyclerViewAdapter)mRecyclerView.getAdapter()).removeItem(position);
+//
+//                        (mRecyclerView.getAdapter()).notifyDataSetChanged();
+//                        MediaScannerConnection.scanFile(MainActivity.this, new String[]{ file.getAbsolutePath()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+//                            public void onScanCompleted(String path, Uri uri)
+//                            {
+//                            }
+//                        });
+//                        Toast.makeText(getApplicationContext(), "Deleted!!" + String.valueOf(deleted),
+//                                Toast.LENGTH_LONG).show();
 
                     }
                 })

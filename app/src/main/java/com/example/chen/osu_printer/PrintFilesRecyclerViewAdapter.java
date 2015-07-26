@@ -78,6 +78,7 @@ public class PrintFilesRecyclerViewAdapter extends RecyclerView.Adapter<PrintFil
 
     public void removeItem(int position) {
         mFiles.remove(position);
+        mCheckboxes.remove(position);
     }
 
     @Override

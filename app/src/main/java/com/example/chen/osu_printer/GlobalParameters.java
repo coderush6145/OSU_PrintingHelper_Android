@@ -7,6 +7,7 @@ public class GlobalParameters {
 
     public static final String[] department = {"ECE", "CSE"};
     public static final String[] departmentFullTitle = {"Electrical and Computer Engineering", "Computer Science Engineering"};
+    public static final String[] departmentServerIp = {"", "gamma.cse.ohio-state.edu"};
 
 
 

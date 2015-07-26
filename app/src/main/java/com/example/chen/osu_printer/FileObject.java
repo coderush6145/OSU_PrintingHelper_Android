@@ -29,6 +29,11 @@ public class FileObject {
         this.filePath = "";
     }
 
+    FileObject(String filePath){
+        this.setFilePath(filePath);
+    }
+
+
     public String getLastUpdateDate() {
         return lastUpdateDate;
     }

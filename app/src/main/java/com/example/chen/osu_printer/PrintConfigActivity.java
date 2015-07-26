@@ -1,6 +1,7 @@
 package com.example.chen.osu_printer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,20 +43,6 @@ public class PrintConfigActivity extends Activity {
         setContentView(R.layout.print_config_view);
 
         PrintConfigManager.getInstance().loadFromLocalXML(getApplicationContext());
-
-
-        //handle the case when app started from other application
-        if (AccountManager.getInstance().getRunningAccount() == null) {
-            AccountManager.getInstance().loadFromLocalXML(getApplicationContext());
-            if (AccountManager.getInstance().getAccounts().isEmpty()) {
-                Toast.makeText(PrintConfigActivity.this, "No accounts available. Please add accounts through application main entry.",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(PrintConfigActivity.this, "Note that the first account is being used now.",
-                        Toast.LENGTH_LONG).show();
-                AccountManager.getInstance().setRunningAccount(AccountManager.getInstance().getAccount(0));
-            }
-        }
 
 
         mDuplexSwitch = (Switch) findViewById(R.id.doublePageSwitch);
@@ -155,6 +142,31 @@ public class PrintConfigActivity extends Activity {
                     }
                 })
         );
+
+
+        //handle the case when app is used by external application to open a printable file
+        Intent _intent = getIntent();
+        String filePath = "";
+
+        if (Intent.ACTION_VIEW.equals(_intent.getAction())) {
+            filePath = _intent.getData().getPath();
+            ArrayList<FileObject> toPrintFile = new ArrayList<FileObject>();
+            toPrintFile.add(new FileObject(filePath));
+            PrintConfigManager.getInstance().setToPrintFiles(toPrintFile);
+        }
+
+        //handle the case when app started from other application
+        if (AccountManager.getInstance().getRunningAccount() == null) {
+            AccountManager.getInstance().loadFromLocalXML(getApplicationContext());
+            if (AccountManager.getInstance().getAccounts().isEmpty()) {
+                Toast.makeText(PrintConfigActivity.this, "No accounts available. Please add accounts through application main entry.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(PrintConfigActivity.this, "Note that the first account is being used now.",
+                        Toast.LENGTH_LONG).show();
+                AccountManager.getInstance().setRunningAccount(AccountManager.getInstance().getAccount(0));
+            }
+        }
 
         //Only the first time entering from external application need to load info from server, after the first time we only need to select the printers of the corresponding dept.
         if (PrinterManager.mAllPrinters == null || PrinterManager.mAllPrinters.isEmpty()){

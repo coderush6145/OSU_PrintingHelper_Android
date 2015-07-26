@@ -146,8 +146,26 @@ public class PrintConfigActivity extends Activity {
                 })
         );
 
+        if (AccountManager.getInstance().getRunningAccount() == null) {
+            //handle the case when app is used by external application to open a printable file
+            handleExternalIntent();
+        } else {
+            setupAdapter();
+        }
 
-        //handle the case when app is used by external application to open a printable file
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        handleExternalIntent();
+    }
+
+
+    //handle the case when app is used by external application to open a printable file
+    public void handleExternalIntent() {
         Intent _intent = getIntent();
         String filePath = "";
 
@@ -156,31 +174,27 @@ public class PrintConfigActivity extends Activity {
             ArrayList<FileObject> toPrintFile = new ArrayList<FileObject>();
             toPrintFile.add(new FileObject(filePath));
             PrintConfigManager.getInstance().setToPrintFiles(toPrintFile);
-        }
 
-        //handle the case when app started from other application
-        if (AccountManager.getInstance().getRunningAccount() == null) {
+
             AccountManager.getInstance().loadFromLocalXML(getApplicationContext());
             if (AccountManager.getInstance().getAccounts().isEmpty()) {
                 Toast.makeText(PrintConfigActivity.this, "No accounts available. Please add accounts through application main entry.",
                         Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(PrintConfigActivity.this, "Note that the first account is being used now.",
+                Toast.makeText(PrintConfigActivity.this, "Note that the first account is being used now as default account.",
                         Toast.LENGTH_LONG).show();
                 AccountManager.getInstance().setRunningAccount(AccountManager.getInstance().getAccount(0));
             }
-        }
 
-        //Only the first time entering from external application need to load info from server, after the first time we only need to select the printers of the corresponding dept.
-        if (PrinterManager.mAllPrinters == null || PrinterManager.mAllPrinters.isEmpty()){
+
+            //Only the first time entering from external application need to load info from server, after the first time we only need to select the printers of the corresponding dept.
             new LoadPrinterInfoFromServer().execute();
-        }
-        else {
-            setupAdapter();
         }
 
     }
 
+
+    //check if need to inflate an empty view instead of the recyclerview
     private void checkEmpty(){
 
         if (mEmptyView == null) {
@@ -196,6 +210,8 @@ public class PrintConfigActivity extends Activity {
         }
     }
 
+
+    //for recyclerview
     private void setupAdapter() {
 
         try {
@@ -213,12 +229,14 @@ public class PrintConfigActivity extends Activity {
         checkEmpty();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_print_config_activity, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -234,6 +252,7 @@ public class PrintConfigActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
     public class LoadPrinterInfoFromServer extends AsyncTask<String, String, Boolean> {
 
@@ -263,6 +282,7 @@ public class PrintConfigActivity extends Activity {
             }
             return true;
         }
+
 
         @Override
         protected void onPostExecute(Boolean loadResult) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">OSU Printer</string>
+    <string name="app_name">OSU Printing Helper</string>
     <string name="action_settings">Settings</string>
     <string name="confirmButton">confirm</string>
     <string name="action_search">search</string>
@@ -25,7 +25,7 @@
         <item>Ulric</item>
         <item>Donovan</item>
     </string-array>
-    <string name="title_activity_print_config_activity">print_config_activity</string>
+    <string name="title_activity_print_config_activity">OSU Printing Helper</string>
 
     <string name="title_activity_login">OSU Printing Helper</string>
 

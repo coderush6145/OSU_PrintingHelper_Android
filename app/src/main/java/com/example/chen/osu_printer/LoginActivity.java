@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -61,6 +62,8 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //add tutorial pages
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/coderush6145/OSU_PrintingHelper_Android/blob/master/README.md#usage"));
+                startActivity(browserIntent);
             }
         });
 

@@ -2,20 +2,27 @@ package com.example.chen.osu_printer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,21 +38,28 @@ import java.util.ArrayList;
 
 public class PrintConfigActivity extends Activity {
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerViewPrinter;
+    private RecyclerView mRecyclerViewAccounts;
     private TextView mEmptyView;
     private PrinterRecyclerViewAdapter mPrinterRecyclerViewAdapter;
     private ArrayList<PrinterObject> mAvailablePrinters;
+    private AccountRecyclerViewAdapter_2 mAccountsViewAdapter;
     private Switch mDuplexSwitch;
     private EditText mCopiesEditText;
     private Button mPrintButton;
+    private PopupWindow mPopupWindow;
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.print_config_view);
+        setContentView(R.layout.activity_print_config);
 
+
+        //initialization
         PrintConfigManager.getInstance().loadFromLocalXML(getApplicationContext());
+        final Toast mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
 
         mDuplexSwitch = (Switch) findViewById(R.id.doublePageSwitch);
@@ -69,8 +83,9 @@ public class PrintConfigActivity extends Activity {
                     PrintConfigManager.getInstance().setCopies(Integer.valueOf(s.toString()));
                 }
                 if (s.toString().length() >= 4) {
-                    Toast.makeText(getApplicationContext(), "Please note that a too big number will not be accepted.",
-                            Toast.LENGTH_SHORT).show();
+
+                    mToast.setText("Please note that a too big number will not be accepted.");
+                    mToast.show();
                 }
 
                 // you can call or do what you want with your EditText here
@@ -87,52 +102,55 @@ public class PrintConfigActivity extends Activity {
         mPrintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCopiesEditText.getText().toString().length() != 0 && Integer.valueOf(mCopiesEditText.getText().toString()) >= 1) {
+                if (mCopiesEditText.getText().toString().length() != 0 && mCopiesEditText.getText().toString().length() < 4 && Integer.valueOf(mCopiesEditText.getText().toString()) >= 1) {
                     if (PrintConfigManager.getInstance().getPrinter() != null) {
                         //print the file
                         PrintConfigManager.getInstance().saveToLocalXML(getApplicationContext());
                         new PrintingProcess(PrintConfigActivity.this).execute(PrintConfigManager.getInstance());
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Please choose the printer before proceed.",
-                                Toast.LENGTH_LONG).show();
-
+                        mToast.setText("Please choose the printer before proceed.");
+                        mToast.show();
                     }
                 } else {
                     if (mCopiesEditText.getText().toString().length() == 0) {
-                        Toast.makeText(getApplicationContext(), "Please fill in the number of copies needed before proceed.",
-                                Toast.LENGTH_LONG).show();
+                        mToast.setText("Invalid input number.");
+                        mToast.show();
+                    } else if (mCopiesEditText.getText().toString().length() == 0) {
+                        mToast.setText("Please fill in the number of copies needed before proceed.");
+                        mToast.show();
+
                     } else if (Integer.valueOf(mCopiesEditText.getText().toString()) < 1) {
-                        Toast.makeText(getApplicationContext(), "Please fill in a number greater than 0 in the copies field.",
-                                Toast.LENGTH_LONG).show();
+                        mToast.setText("Please fill in a number greater than 0 in the copies field.");
+                        mToast.show();
                     }
                 }
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.activity_print_config_recyclerview);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerViewPrinter = (RecyclerView) findViewById(R.id.activity_print_config_recyclerview);
+        mRecyclerViewPrinter.setHasFixedSize(true);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerViewPrinter.setLayoutManager(layoutManager);
 
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        mRecyclerViewPrinter.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, mRecyclerViewPrinter, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        if (position != ((PrinterRecyclerViewAdapter) mRecyclerView.getAdapter()).getChosenPrinter()) {
+                        if (position != ((PrinterRecyclerViewAdapter) mRecyclerViewPrinter.getAdapter()).getChosenPrinter()) {
 
-                            int prevChoice = ((PrinterRecyclerViewAdapter) mRecyclerView.getAdapter()).getChosenPrinter();
-                            ((PrinterRecyclerViewAdapter) mRecyclerView.getAdapter()).setCheckBox(position, true);
-                            ((PrintConfigManager) PrintConfigManager.getInstance()).setPrinter(((PrinterRecyclerViewAdapter) mRecyclerView.getAdapter()).getItem(position));
+                            int prevChoice = ((PrinterRecyclerViewAdapter) mRecyclerViewPrinter.getAdapter()).getChosenPrinter();
+                            ((PrinterRecyclerViewAdapter) mRecyclerViewPrinter.getAdapter()).setCheckBox(position, true);
+                            ((PrintConfigManager) PrintConfigManager.getInstance()).setPrinter(((PrinterRecyclerViewAdapter) mRecyclerViewPrinter.getAdapter()).getItem(position));
 
                             if (prevChoice != -1) {
-                                ((PrinterRecyclerViewAdapter) mRecyclerView.getAdapter()).setCheckBox(prevChoice, false);
-                                (mRecyclerView.getAdapter()).notifyItemChanged(prevChoice);
+                                ((PrinterRecyclerViewAdapter) mRecyclerViewPrinter.getAdapter()).setCheckBox(prevChoice, false);
+                                (mRecyclerViewPrinter.getAdapter()).notifyItemChanged(prevChoice);
                             }
-                            (mRecyclerView.getAdapter()).notifyItemChanged(position);
-                            ((PrinterRecyclerViewAdapter) mRecyclerView.getAdapter()).setChosenPrinter(position);
+                            (mRecyclerViewPrinter.getAdapter()).notifyItemChanged(position);
+                            ((PrinterRecyclerViewAdapter) mRecyclerViewPrinter.getAdapter()).setChosenPrinter(position);
                         }
                     }
 
@@ -164,6 +182,54 @@ public class PrintConfigActivity extends Activity {
     }
 
 
+    private void showAccountSelectionPopup(View popupView){
+        LayoutInflater layoutInflater= (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        popupView = layoutInflater.inflate(R.layout.print_config_popup_view, null);
+        mPopupWindow = new PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.color.Gray);
+
+        BitmapDrawable bmDrawable=new BitmapDrawable(getResources(), bm);
+        mPopupWindow.setBackgroundDrawable(bmDrawable);
+
+        mRecyclerViewAccounts = (RecyclerView) popupView.findViewById(R.id.activity_print_config_popup_recyclerview);
+//        mRecyclerViewAccounts.setHasFixedSize(true);
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerViewAccounts.setLayoutManager(layoutManager);
+
+        //setup adapter
+        mAccountsViewAdapter = new AccountRecyclerViewAdapter_2(this, AccountManager.getInstance().getAccounts());
+        mRecyclerViewAccounts.setAdapter(mAccountsViewAdapter);
+
+        mRecyclerViewAccounts.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, mRecyclerViewAccounts, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, final int position) {
+                    }
+
+                    @Override
+                    public void onItemSwipe(View view, int position) {
+                    }
+                })
+        );
+
+
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+    }
+
+
+
     //handle the case when app is used by external application to open a printable file
     public void handleExternalIntent() {
         Intent _intent = getIntent();
@@ -177,13 +243,19 @@ public class PrintConfigActivity extends Activity {
 
 
             AccountManager.getInstance().loadFromLocalXML(getApplicationContext());
-            if (AccountManager.getInstance().getAccounts().isEmpty()) {
-                Toast.makeText(PrintConfigActivity.this, "No accounts available. Please add accounts through application main entry.",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(PrintConfigActivity.this, "Note that the first account is being used now as default account.",
-                        Toast.LENGTH_LONG).show();
+            if (AccountManager.getInstance().getAccounts().size() == 1){
+
                 AccountManager.getInstance().setRunningAccount(AccountManager.getInstance().getAccount(0));
+
+            } else {
+                LayoutInflater layoutInflater= (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                final View popupView = layoutInflater.inflate(R.layout.print_config_popup_view, null);
+                popupView.post(new Runnable() {
+                    public void run() {
+                        showAccountSelectionPopup(popupView);
+                    }
+                });
+
             }
 
 
@@ -200,12 +272,12 @@ public class PrintConfigActivity extends Activity {
         if (mEmptyView == null) {
             mEmptyView = (TextView) findViewById(R.id.activity_print_config_emptyview);
         }
-        if (mRecyclerView.getAdapter() == null || mRecyclerView.getAdapter().getItemCount() == 0) {
-            mRecyclerView.setVisibility(View.GONE);
+        if (mRecyclerViewPrinter.getAdapter() == null || mRecyclerViewPrinter.getAdapter().getItemCount() == 0) {
+            mRecyclerViewPrinter.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
             mEmptyView.setTypeface(Typeface.MONOSPACE);
         } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
+            mRecyclerViewPrinter.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         }
     }
@@ -224,7 +296,7 @@ public class PrintConfigActivity extends Activity {
 
         if (mAvailablePrinters != null) {
             mPrinterRecyclerViewAdapter = new PrinterRecyclerViewAdapter(this, mAvailablePrinters);
-            mRecyclerView.setAdapter(mPrinterRecyclerViewAdapter);
+            mRecyclerViewPrinter.setAdapter(mPrinterRecyclerViewAdapter);
         }
         checkEmpty();
     }

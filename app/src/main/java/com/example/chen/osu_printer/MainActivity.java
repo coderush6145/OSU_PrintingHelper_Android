@@ -170,8 +170,9 @@ public class MainActivity extends Activity {
                 Toast.makeText(getApplicationContext(), "this is my Toast message!!! search!!",
                     Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.action_settings:
-
+            case R.id.action_about:
+                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -13,11 +13,11 @@ import java.util.List;
 /**
  * Created by chen on 15/7/15.
  */
-public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecyclerViewAdapter.AccountsViewHolder> {
+public class AccountRecyclerViewAdapter_2 extends RecyclerView.Adapter<AccountRecyclerViewAdapter_2.AccountsViewHolder> {
     private Context mContext;
     private List<AccountManager.Account> mAccounts;
 
-    public AccountRecyclerViewAdapter(Context context, List<AccountManager.Account> data) {
+    public AccountRecyclerViewAdapter_2(Context context, List<AccountManager.Account> data) {
         mContext = context;
         mAccounts = data;
     }
@@ -39,7 +39,7 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
 
     @Override
     public AccountsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View inflatedView = LayoutInflater.from(mContext).inflate(R.layout.account_view, viewGroup, false);
+        View inflatedView = LayoutInflater.from(mContext).inflate(R.layout.account_view_2, viewGroup, false);
         return new AccountsViewHolder(inflatedView);
     }
 
@@ -56,6 +56,11 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
 
     @Override
     public int getItemCount() {
+
+        //test
+
+
+
 
         return mAccounts.size();
     }

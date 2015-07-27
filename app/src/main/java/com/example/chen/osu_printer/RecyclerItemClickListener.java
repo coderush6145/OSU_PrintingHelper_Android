@@ -49,14 +49,17 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
             @Override
             public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY)
             {
-                View childView1 = view.findChildViewUnder(event1.getX(), event1.getY());
-                View childView2 = view.findChildViewUnder(event2.getX(), event2.getY());
+                if (event1 != null && event2 != null) {     //for handling the unexpected error in loginActivity when swipe down
 
-                if (event1.getX() > event2.getX() && childView1 == childView2 && childView1 != null && mListener != null) {
+                    View childView1 = view.findChildViewUnder(event1.getX(), event1.getY());
+                    View childView2 = view.findChildViewUnder(event2.getX(), event2.getY());
 
-                    mListener.onItemSwipe(childView1, view.getChildPosition(childView1));
-                }
-                return true;
+                    if (event1.getX() > event2.getX() + 120 && childView1 == childView2 && childView1 != null && mListener != null) {
+
+                        mListener.onItemSwipe(childView1, view.getChildPosition(childView1));
+                    }
+                    return true;
+                } return false;
             }
         });
     }

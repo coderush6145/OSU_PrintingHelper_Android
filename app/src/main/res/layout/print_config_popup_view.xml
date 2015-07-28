@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@drawable/rounded_corner_bg"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:weightSum="1">
     >
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:orientation="vertical"
-        android:weightSum="1">
+        >
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="0.7">
+            android:weightSum="1"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select a Account"
+                android:textSize="23sp"
+                android:gravity="left"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/activity_print_config_popup_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.8"
-                android:layout_gravity="center"
+                android:layout_height="120dp"
+                android:padding="10dp"
                 >
             </android.support.v7.widget.RecyclerView>
 
@@ -33,8 +40,8 @@
                 android:id="@+id/activity_print_config_emptyview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.8"
-                android:text="No Printers Data"
+                android:layout_weight="0.4"
+                android:text="No Accounts Available"
                 android:typeface="monospace"
                 android:textSize="23sp"
                 android:visibility="gone"
@@ -44,28 +51,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.2"
-                android:gravity="center"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:gravity="right"
                 >
                 <Button
-                    android:id="@+id/print_button"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/quit_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/custom_button_3"
+                    android:background="@drawable/custom_button_1"
                     android:alpha=".70"
-                    android:text="print"/>
+                    android:text="Quit"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_weight="1" />
 
 </LinearLayout>

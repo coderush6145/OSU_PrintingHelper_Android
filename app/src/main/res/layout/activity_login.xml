@@ -40,9 +40,9 @@
             android:layout_height="0dp"
             android:layout_weight="0.6"
             android:layout_gravity="center"
-            android:text="No Account Available"
+            android:text="Please Add Your Account"
             android:gravity="center"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textColor="@color/White"
             android:visibility="visible"/>
 
@@ -67,7 +67,7 @@
                     android:layout_weight="0.48"
                     android:layout_height="wrap_content"
                     android:text="Tutorial"
-                    android:background="@drawable/custom_button_1"
+                    android:background="@drawable/custom_button_3"
                     android:alpha=".80"/>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -80,7 +80,7 @@
                     android:layout_weight="0.48"
                     android:layout_height="wrap_content"
                     android:text="New Account"
-                    android:background="@drawable/custom_button_1"
+                    android:background="@drawable/custom_button_3"
                     android:alpha=".80"/>
 
             </LinearLayout>

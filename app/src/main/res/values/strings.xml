@@ -5,7 +5,7 @@
     <string name="action_about">About</string>
     <string name="confirmButton">confirm</string>
     <string name="action_search">search</string>
-    <string name="succeed_message">Print command successfully sent!</string>
+    <string name="succeed_message">Print request successfully sent!</string>
 
     <string-array name="cat_names">
         <item>George</item>

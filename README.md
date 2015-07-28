@@ -19,7 +19,7 @@ To get started, first hit the new account button and put in the information you 
 
 You can edit the account later by a long click on it.
 
-<img src="Screenshot_2015-07-27-22-04-05.png" width="360" height="640" "/>
+<img src="Screenshot_2015-07-27-22-04-05.png" width="360" height="640"  />
 <img src="Screenshot_2015-07-28-14-00-57.png" width="360" height="640" "/> 
 
 <br />

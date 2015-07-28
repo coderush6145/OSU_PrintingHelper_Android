@@ -6,15 +6,15 @@ The intention of creating this application is to help student to
 print their documents using department printers more efficiently. 
 The project currently is still under construction.
 
+### Usage
+
+[Read more words!](Screenshot_2015-07-27-22-04-05.png)
+
+
+
 ### Credit
 Author: Xiangzhou Chen <br/>
 Email: chen.4835@osu.edu <br/>
-
-
-### Usage
-
-
-
 
 ### Other
 If you like it, please feel free to recommend to your friend. </br>

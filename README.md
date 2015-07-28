@@ -8,7 +8,7 @@ The project currently is still under construction.
 
 ### Usage
 
-[Read more words!](Screenshot_2015-07-27-22-04-05.png)
+![Read more words!](Screenshot_2015-07-27-22-04-05.png)
 
 
 

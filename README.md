@@ -8,8 +8,8 @@ The project currently is still under construction.
 
 ### Usage
 
-![](./Screenshot_2015-07-27-22-04-05.png =100x20)
-<img src="Screenshot_2015-07-27-22-04-05.png" width="200" height="200" "/>
+
+<img src="Screenshot_2015-07-27-22-04-05.png" width="960" height="540" "/>
 
 
 ### Credit

@@ -9,7 +9,7 @@ The project currently is still under construction.
 ### Usage
 
 
-<img src="Screenshot_2015-07-27-22-04-05.png" width="960" height="540" "/>
+<img src="Screenshot_2015-07-27-22-04-05.png" width="540" height="960" "/>
 
 
 ### Credit

@@ -16,6 +16,7 @@ You can edit the account later by a long click on it. Right now just tap on it, 
 <img src="Screenshot_2015-07-28-14-00-57.png" width="360" height="640" "/>
 
 2. Pick the files and department printer that you want to use.
+
 <img src="Screenshot_2015-07-27-22-36-25.png" width="360" height="640" "/>
 <img src="Screenshot_2015-07-27-22-04-32.png" width="360" height="640" "/>
 

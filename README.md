@@ -28,7 +28,7 @@ You can edit the account later by a long click on it.
 
 Simple click on your account card, you will be navigated to next page carrying your account information.  All the *.pdf, *.doc, *.docx files in your phone are presented in front of you. Pick the files you want to use and pick a department printer on next page. Click on print button and your printing request will be sent to the printer. A toast message will show up upon successful completion.
 
-<img src="Screenshot_2015-07-27-22-36-25.png" width="360" height="640" />
+<img src="Screenshot_2015-07-27-22-36-25.png" width="360" />
 <img src="Screenshot_2015-07-27-22-04-32.png" width="360" height="640" />
 
 <br />
